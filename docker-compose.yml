@@ -1,0 +1,72 @@
+version: "3.9"
+
+# ============================================================
+# LEDGER — Docker Compose (Production Evolution Reference)
+# ============================================================
+# NOTE: This file is provided for production architecture
+# documentation and future containerization.
+# The local development setup does NOT require Docker.
+# Run locally with: uvicorn (backend) + npm run dev (frontend)
+# ============================================================
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: ledger_postgres
+    environment:
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: ledger_pass
+      POSTGRES_DB: ledger_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ledger -d ledger_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ledger_backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://ledger:ledger_pass@postgres:5432/ledger_db
+      LLM_PROVIDER: ollama
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads
+      - ./ml/models:/app/ml/models
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ledger_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+
+# ============================================================
+# Production Evolution (not deployed in prototype):
+# React → AWS CloudFront/Amplify
+# FastAPI → ECS/App Runner
+# PostgreSQL → RDS (pgvector extension)
+# Documents → S3
+# LLM → Bedrock (Claude 3)
+# Secrets → Secrets Manager
+# Events → Kinesis/Kafka
+# Logs → CloudWatch
+# ============================================================

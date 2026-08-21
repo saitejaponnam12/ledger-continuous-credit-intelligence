@@ -1,0 +1,117 @@
+[
+  {
+    "id": "demo-001",
+    "scenario": "A",
+    "display_name": "Ananya Sharma",
+    "persona_tag": "thin_file_ntc",
+    "age": 26,
+    "city": "Bengaluru",
+    "features": {
+      "income_consistency": 0.78,
+      "expense_ratio": 0.58,
+      "cashflow_stability": 0.62,
+      "payment_regularity": 0.42,
+      "balance_volatility": 0.28,
+      "recurring_payment_count": 0.3,
+      "days_since_last_payment": 0.85,
+      "liquidity_ratio": 0.65,
+      "debt_to_income": 0.08,
+      "transaction_velocity": 0.38,
+      "account_age_months": 0.12,
+      "income_sources_count": 0.33
+    },
+    "description": "Strong thin-file NTC applicant. Stable income but limited credit history."
+  },
+  {
+    "id": "demo-002",
+    "scenario": "B",
+    "display_name": "Rajesh Nair",
+    "persona_tag": "high_income_unstable",
+    "age": 34,
+    "city": "Mumbai",
+    "features": {
+      "income_consistency": 0.32,
+      "expense_ratio": 0.88,
+      "cashflow_stability": 0.28,
+      "payment_regularity": 0.65,
+      "balance_volatility": 0.82,
+      "recurring_payment_count": 0.6,
+      "days_since_last_payment": 0.72,
+      "liquidity_ratio": 0.4,
+      "debt_to_income": 0.38,
+      "transaction_velocity": 0.78,
+      "account_age_months": 0.62,
+      "income_sources_count": 0.78
+    },
+    "description": "High income freelancer with volatile cashflow. Multiple income sources."
+  },
+  {
+    "id": "demo-003",
+    "scenario": "C",
+    "display_name": "Priya Menon",
+    "persona_tag": "moderate_disciplined",
+    "age": 31,
+    "city": "Pune",
+    "features": {
+      "income_consistency": 0.91,
+      "expense_ratio": 0.42,
+      "cashflow_stability": 0.88,
+      "payment_regularity": 0.96,
+      "balance_volatility": 0.12,
+      "recurring_payment_count": 0.7,
+      "days_since_last_payment": 0.95,
+      "liquidity_ratio": 0.85,
+      "debt_to_income": 0.07,
+      "transaction_velocity": 0.45,
+      "account_age_months": 0.75,
+      "income_sources_count": 0.5
+    },
+    "description": "Salaried professional with exceptional financial discipline."
+  },
+  {
+    "id": "demo-004",
+    "scenario": "D",
+    "display_name": "Karan Mehta",
+    "persona_tag": "high_volatility_suspicious",
+    "age": 29,
+    "city": "Delhi",
+    "features": {
+      "income_consistency": 0.15,
+      "expense_ratio": 1.18,
+      "cashflow_stability": 0.1,
+      "payment_regularity": 0.22,
+      "balance_volatility": 1.15,
+      "recurring_payment_count": 0.18,
+      "days_since_last_payment": 0.25,
+      "liquidity_ratio": 0.12,
+      "debt_to_income": 0.72,
+      "transaction_velocity": 0.88,
+      "account_age_months": 0.28,
+      "income_sources_count": 0.22
+    },
+    "description": "High transaction velocity with suspicious activity patterns."
+  },
+  {
+    "id": "demo-005",
+    "scenario": "E",
+    "display_name": "Divya Krishnan",
+    "persona_tag": "ambiguous_ntc",
+    "age": 24,
+    "city": "Chennai",
+    "features": {
+      "income_consistency": 0.52,
+      "expense_ratio": 0.62,
+      "cashflow_stability": 0.42,
+      "payment_regularity": 0.35,
+      "balance_volatility": 0.48,
+      "recurring_payment_count": 0.2,
+      "days_since_last_payment": 0.58,
+      "liquidity_ratio": 0.48,
+      "debt_to_income": 0.18,
+      "transaction_velocity": 0.28,
+      "account_age_months": 0.06,
+      "income_sources_count": 0.22
+    },
+    "description": "Genuinely ambiguous case. System should request additional evidence."
+  }
+]

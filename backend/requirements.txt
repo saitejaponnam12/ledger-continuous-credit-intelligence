@@ -1,0 +1,54 @@
+# ============================================================
+# LEDGER Backend — Python Dependencies
+# ============================================================
+
+# --- Web Framework ---
+fastapi
+uvicorn[standard]
+python-multipart
+
+# --- Database ---
+sqlalchemy[asyncio]
+aiosqlite
+alembic
+
+# --- Validation & Config ---
+pydantic
+pydantic-settings
+email-validator
+
+# --- Auth ---
+python-jose[cryptography]
+passlib[bcrypt]
+
+# --- Rate Limiting ---
+slowapi
+
+# --- ML Core ---
+numpy
+pandas
+scikit-learn
+xgboost
+shap
+
+# --- LLM / RAG ---
+ollama
+sentence-transformers
+
+# --- OCR / Document Extraction ---
+pdfplumber
+pytesseract
+Pillow
+
+# --- Utilities ---
+httpx
+python-dateutil
+pytz
+tenacity
+structlog
+
+# --- Testing ---
+pytest
+pytest-asyncio
+pytest-cov
+factory-boy

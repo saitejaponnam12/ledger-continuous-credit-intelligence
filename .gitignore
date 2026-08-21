@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ML Models (tracked via Git LFS or excluded — too large)
+ml/models/*.pkl
+ml/models/*.joblib
+ml/models/*.bin
+ml/models/*.json
+!ml/models/.gitkeep
+
+# Data (synthetic only — do not commit real data ever)
+data/synthetic/*.csv
+data/synthetic/*.parquet
+!data/synthetic/.gitkeep
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/build/
+*.log
+npm-debug.log*
+
+# Database & Local Stores
+*.db
+*.sqlite
+*.sqlite3
+ledger.db
+backend/ledger.db
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Uploads & Media (except documentation assets and sample data)
+uploads/
+*.pdf
+*.png
+*.jpg
+!data/documents/sample/*.pdf
+!docs/ppt_assets/*
+!docs/ppt_assets/*.png
+
+# Alembic
+backend/alembic/versions/*.pyc
+
+# Coverage
+htmlcov/
+.coverage
+coverage.xml
