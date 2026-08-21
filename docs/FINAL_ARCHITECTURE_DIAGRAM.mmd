@@ -1,0 +1,111 @@
+graph TD
+    %% ============================================================
+    %% LEDGER — FINAL ARCHITECTURE SPECIFICATION (MERMAID)
+    %% One Synchrony Campus Hackathon • Release Candidate 1.0
+    %% ============================================================
+
+    subgraph CLIENT_LAYER["1. CLIENT / PRESENTATION LAYER (React 19 + TypeScript + Vite)"]
+        UI_AUTH["Authentication & RBAC<br/>(Sarah Chen / Demo Admin)"]
+        UI_CMD["Executive Command Center<br/>(/dashboard)<br/>• Portfolio KPIs & Pathway Distribution<br/>• Risk Band & Anomaly Monitoring"]
+        UI_APP["Underwriter Case Workbench<br/>(/applications)<br/>• Real-Time Search & Multi-Filters<br/>• Case Triage & Direct Twin CTA"]
+        
+        subgraph TWIN_CONSOLE["Financial Twin Intelligence Console (/applications/:id)"]
+            UI_TWIN["Financial Twin 6D Radar<br/>(Stability, Reliability, Discipline, etc.)"]
+            UI_TRAJ["Multi-Point Risk Trajectory<br/>(Point 1 Baseline ──► Point 2 Evolution)"]
+            UI_WHAT["What Changed? 7-Stage Causal Chain<br/>(Evidence ──► XGBoost ──► SHAP ──► Pathway)"]
+            UI_NBE["Next-Best-Evidence (NBE)<br/>(Ranked Uncertainty Reduction ΔU)"]
+            UI_CF["Counterfactual Simulator<br/>(Interactive Sliders & Trajectory Fork)"]
+            UI_COPILOT["Grounded AI Copilot Chat<br/>(Tool Calls & Policy Citations)"]
+            UI_DOCS["Multimodal Document Center<br/>(5-Step Local OCR & Extracted Entities)"]
+            UI_AUDIT["Audit Trail & Evidence Network<br/>(Append-Only Action History)"]
+        end
+    end
+
+    subgraph API_GATEWAY["2. API ROUTING & ACCESS CONTROL (FastAPI + Uvicorn)"]
+        SEC_JWT["JWT Stateless Auth (HS256)<br/>passlib / bcrypt Salted Hash"]
+        SEC_RBAC["Role-Based Access Guard<br/>(require_underwriter / require_demo_admin)"]
+        
+        API_AUTH["/api/v1/auth<br/>(Login, Profile)"]
+        API_APPS["/api/v1/applications<br/>(Analyze, Risk, Explanation, NBE, CF)"]
+        API_DOCS["/api/v1/applications/:id/documents<br/>(Upload, OCR Parse, Incorporate)"]
+        API_EVENTS["/api/v1/events<br/>(Simulate Event, WS Stream)"]
+        API_COPILOT["/api/v1/copilot<br/>(Query, Citations)"]
+        API_DEMO["/api/v1/demo<br/>(Status, Seed-All, Reset/A..E)"]
+    end
+
+    subgraph MULTIMODAL_INGESTION["3. MULTIMODAL EVIDENCE INGESTION (Local Python OCR)"]
+        RAW_DOCS["Unstructured Documents<br/>(PDF Statements, PNG/JPG Receipts, CSVs)"]
+        OCR_STEP1["1. Ingestion Checksum (SHA-256)"]
+        OCR_STEP2["2. Document Classification (bank_stmt 95%)"]
+        OCR_STEP3["3. Layout OCR (pdfplumber / pytesseract)"]
+        OCR_STEP4["4. Entity Extraction (Salary ₹64,820, 24 Txns)"]
+        OCR_STEP5["5. Validation Reconciler (94% Conf)"]
+    end
+
+    subgraph ML_DECISION_ENGINE["4. DETERMINISTIC ML DECISION ENGINE (Authoritative Side)"]
+        FE_ENGINE["12-Feature Cashflow Engineering<br/>(compute_features: income consistency,<br/>debt-to-income, liquidity ratio, velocity)"]
+        XGB_MODEL["XGBoost Base Classifier<br/>(12 Trees Ensemble)"]
+        ISO_CALIB["Isotonic Probability Calibration<br/>(CalibratedClassifierCV ──► P(default))"]
+        SHAP_TREE["SHAP TreeExplainer (shap_utils)<br/>(Exact Shapley Values & Delta ΔSHAP)"]
+        RULE_ENGINE["Deterministic Pathway Rule Engine<br/>(Rule 1: Fraud ──► Human Review<br/>Rule 2: Thin-File ──► Request Evidence<br/>Rule 5: Low Risk ──► Conditional Approval)"]
+    end
+
+    subgraph EXPLAINABILITY_RAG["5. BOUNDED RAG EXPLAINABILITY (Explanation Side — Never Decides)"]
+        POLICY_DOCS["Underwriting Policy Manuals<br/>(Policy P-15: Credit Pathway Rules)"]
+        EMBED_MODEL["Dense Semantic Embeddings<br/>(sentence-transformers all-MiniLM-L6-v2)"]
+        VEC_STORE["Vector Similarity Retrieval<br/>(Cosine / In-Memory / pgvector)"]
+        READONLY_TOOLS["Bounded Read-Only Tools<br/>(get_customer_profile, get_credit_pathway,<br/>get_model_explanation, get_uncertainty)"]
+        LLM_PROVIDER["LLM Provider (Local / Mock)<br/>(Ollama / MockProvider)"]
+    end
+
+    subgraph REALTIME_STREAMING["6. REAL-TIME EVENT STREAMING (WebSocket Engine)"]
+        EVENT_PUB["Simulated Transaction Event<br/>(POST /events/simulate)"]
+        WS_MGR["ConnectionManager (websocket_manager.py)"]
+        WS_STREAM["WebSocket Stream (RFC 6455)<br/>(ws://localhost:8000/events/ws/:id)"]
+    end
+
+    subgraph DATA_PERSISTENCE["7. DATA PERSISTENCE & AUDIT LEDGER (SQLAlchemy Async ORM)"]
+        DB_SQLITE["Relational Schema<br/>(Users, Customers, Applications, Accounts,<br/>Transactions, RiskScores, Decisions, Documents)"]
+        DB_AUDIT["Append-Only Audit Events Table<br/>(Actor, Timestamp, Payload Hash, Model Version)"]
+        DB_FRAUD["Fraud & Anomaly Signals Table<br/>(Severity, Volatility Spikes, Velocity Spikes)"]
+    end
+
+    %% Data Flow Connections
+    CLIENT_LAYER <──►|REST HTTPS / JWT| API_GATEWAY
+    API_DOCS ──► MULTIMODAL_INGESTION
+    MULTIMODAL_INGESTION ──►|24 Verified Txns| FE_ENGINE
+    
+    FE_ENGINE ──►|12-Dim Vector| XGB_MODEL
+    XGB_MODEL ──► ISO_CALIB
+    ISO_CALIB ──►|Calibrated Risk + Conf| SHAP_TREE
+    SHAP_TREE ──►|Shapley Vectors| RULE_ENGINE
+    RULE_ENGINE ──►|Credit Pathway Decision| DB_SQLITE
+    
+    API_COPILOT ──► VEC_STORE
+    POLICY_DOCS ──► EMBED_MODEL ──► VEC_STORE
+    VEC_STORE ──► READONLY_TOOLS
+    READONLY_TOOLS ──►|Authoritative Context| LLM_PROVIDER
+    LLM_PROVIDER ──►|Grounded Explanation Only| UI_COPILOT
+
+    EVENT_PUB ──► FE_ENGINE
+    RULE_ENGINE ──► WS_MGR
+    WS_MGR ──► WS_STREAM ──► TWIN_CONSOLE
+
+    API_GATEWAY ──► DB_SQLITE
+    API_GATEWAY ──► DB_AUDIT
+    RULE_ENGINE ──► DB_FRAUD
+
+    %% Styling
+    classDef client fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef api fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef ml fill:#022c22,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    classDef ocr fill:#311042,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
+    classDef rag fill:#422006,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
+    classDef db fill:#1e1e24,stroke:#94a3b8,stroke-width:2px,color:#f8fafc;
+
+    class CLIENT_LAYER,TWIN_CONSOLE client;
+    class API_GATEWAY api;
+    class ML_DECISION_ENGINE ml;
+    class MULTIMODAL_INGESTION ocr;
+    class EXPLAINABILITY_RAG rag;
+    class DATA_PERSISTENCE,REALTIME_STREAMING db;
